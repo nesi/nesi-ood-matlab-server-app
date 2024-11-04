@@ -5,26 +5,3 @@
 [[ $(type -t module) == "function" ]] && export -f module
 
 exec &> >(tee -a "pod.log")
-
-# Define a password and export it for RStudio authentication
-source /bin/find_host_port
-source /bin/save_passwd_as_secret
-export password="$PASSWORD"
-export host="$HOST_CFG"
-export port="$PORT_CFG"
-
-echo "host is: ${host}"
-echo "port is: ${port}"
-
-# Define CSRF_TOKEN and export it for auth
-<%-
-  require 'securerandom'
-  csrftoken=SecureRandom.uuid
--%>
-export csrf_token="<%= csrftoken %>"
-
-echo "password is: $password"
-echo "csrf_token is: ${csrf_token}"
-/bin/bash /opt/open_ondemand/helpers/k8_helper csrf_token "$csrf_token"
-
-export RSTUDIO_PASSWORD="${password}"

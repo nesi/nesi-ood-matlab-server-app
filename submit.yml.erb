@@ -12,7 +12,7 @@ script:
   wall_time: "<%= bc_num_hours.to_i * 3600 %>"
   native:
     container:
-      name: "rstudio"
+      name: "matlab"
       image: "ghcr.io/nesi/nesi-docker-base:v0.2.0"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
       restart_policy: 'OnFailure'
@@ -60,17 +60,6 @@ script:
         destination_path: /etc/nsswitch.conf
     configmap:
       files:
-        - filename: "logging.conf"
-          data: |
-            [*]
-            log-level=debug
-            logger-type=file
-            log-dir=<%= staged_root %>/logs
-          mount_path: '/etc/rstudio'
-        - filename: "database.conf"
-          data: |
-            directory=/tmp/lib/rstudio-server
-          mount_path: '/etc/rstudio/database'
         - filename: 'k8_helper'
           data: |
             #!/usr/bin/env bash

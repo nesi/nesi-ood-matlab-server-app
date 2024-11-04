@@ -18,15 +18,14 @@ cluster: "my-k8s-cluster"
 
 form:
   - account
-  - Rserver
-  - Rapp
+  - mver
   - bc_num_hours
   - num_cores
   - num_mem
   - node
-description: Request a RStudio-Server
+description: Request a MATLAB Server
 submit: submit.yml.erb
-title: RStudio-Server
+title: MATLAB-Server
 
 
 # Define attribute values that aren't meant to be modified by the user within
@@ -44,22 +43,18 @@ attributes:
   #     modules: "python/3.5"
   # @example Using combination of modules
   #     modules: "python/3.5 cuda/8.0.44"
-  modules: "RStudio-Server"
+  modules: "matlab-proxy"
 
-  Rserver:
+  mver:
     widget: select
-    label: "RStudio-Server Version"
+    label: "MATLAB Version"
     options:
-      - [ "2024.04.2-764", "RStudio-Server/2024.04.2-764" ]
-  Rapp:
-    widget: select
-    label: "R Version"
-    options:
-      - [ "4.3.2", "R/4.3.2-foss-2023a" ]
-      - [ "4.3.1", "R/4.3.1-foss-2023a" ]
-      - [ "4.2.1", "R/4.2.1-gimkl-2022a" ]
-      - ["Bioconductor-3.17", "R-bundle-Bioconductor/3.17-gimkl-2022a-R-4.3.1"]
-      - ["R-Geo/4.3.2", "R-Geo/4.3.2-foss-2023a"]
+      - ["2020b", "MATLAB/2020b"]
+      - ["2021a", "MATLAB/2021a"]
+      - ["2021b", "MATLAB/2021b"]
+      - ["2022a", "MATLAB/2022a"]
+      - ["2023a", "MATLAB/2023a"]
+      - ["2023b", "MATLAB/2023b"]
 
   # Any extra command line arguments to feed to the `jupyter notebook ...`
   # command that launches the Jupyter notebook within the batch job
