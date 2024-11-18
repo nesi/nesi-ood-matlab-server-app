@@ -1,1 +1,7 @@
-<p>Hi</p>
+<form action="/rnode/<%= host %>/<%= port %>/auth-do-sign-in" method="post" target="_blank">
+  <input type="hidden" name="mwi-auth-token" value="<%= mwitoken %>"/>
+  <button class="btn btn-primary" type="submit">
+    <i class="fa fa-registered"></i> Connect to MATLAB Server Server
+  </button>
+  <img src="https://www.nesi.org.nz/sites/default/files/media/DininduSenanayake-newsletter.jpg">
+</form>

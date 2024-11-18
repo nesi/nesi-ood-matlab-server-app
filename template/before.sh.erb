@@ -5,3 +5,15 @@
 [[ $(type -t module) == "function" ]] && export -f module
 
 exec &> >(tee -a "pod.log")
+
+source /bin/find_host_port
+
+<%-
+  require 'securerandom'
+  mwitoken=SecureRandom.uuid
+-%>
+export MWI_ENABLE_TOKEN_AUTH=True
+export MWI_AUTH_TOKEN="<%= mwitoken %>"
+
+export MWI_APP_PORT="$PORT_CFG"
+export MWI_APP_HOST="$HOST_CFG"
