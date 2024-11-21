@@ -1,4 +1,4 @@
-<form action="/rnode/<%= host %>/<%= port %>/matlab" method="post" target="_blank">
+<form action="/rnode/<%= host %>/<%= port %>/matlab?mwi-auth-token=<%= mwitoken %>"" method="post" target="_blank">
   <input type="hidden" name="mwi-auth-token" value="<%= mwitoken %>"/>
   <button class="btn btn-primary" type="submit">
     <i class="fa fa-registered"></i> Connect to MATLAB Server Server
