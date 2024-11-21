@@ -12,15 +12,16 @@ source /bin/find_host_port
   require 'securerandom'
   mwitoken=SecureRandom.uuid
 -%>
-export MWI_ENABLE_TOKEN_AUTH=True
 export MWI_AUTH_TOKEN="<%= mwitoken %>"
+export mwitoken="<%= mwitoken %>"
+
+/bin/bash /opt/open_ondemand/helpers/k8_helper mwitoken "$mwitoken"
 
 export MWI_APP_PORT=8080  #"$PORT_CFG"
 #export MWI_APP_HOST="$HOST_CFG"
 
 export host="$HOST_CFG"
 export port="$PORT_CFG"
-export mwitoken="<%= mwitoken %>"
 
 echo "host is: ${host}"
 echo "port is: ${port}"
