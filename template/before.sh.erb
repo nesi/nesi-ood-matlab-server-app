@@ -7,6 +7,7 @@
 exec &> >(tee -a "pod.log")
 
 source /bin/find_host_port
+source /bin/save_passwd_as_secret
 
 <%-
   require 'securerandom'
