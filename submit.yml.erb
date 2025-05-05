@@ -1,7 +1,17 @@
 <%
+
    user = OodSupport::User.new
-   ood_nfs_server = Resolv.getaddress("ood-nfs-node")
-   software_nfs_server = Resolv.getaddress("external-nfs")
+   weka_nfs = Resolv.getaddress("weka-nfs")
+
+   # Initialize nesi_gid to nil
+   nesi_gid = nil
+
+   # Fetch the GID for the account group only if the account is present
+   if account.present?
+     nesi_group = Etc.getgrnam(account)  # Fetching the group based on the account
+     nesi_gid = nesi_group ? nesi_group.gid : nil  # Get the GID, or nil if not found
+   end
+
 %>
 ---
 batch_connect:
@@ -25,29 +35,24 @@ script:
     mounts:
       - type: nfs
         name: home
-        host: <%= ood_nfs_server %>
-        path: /nesi/home
-        destination_path: /nesi/home
+        host: <%= weka_nfs %>
+        path: /home
+        destination_path: /home
       - type: nfs
         name: project
-        host: <%= ood_nfs_server %>
-        path: /nesi/project
+        host: <%= weka_nfs %>
+        path: /project
         destination_path: /nesi/project
       - type: nfs
         name: nobackup
-        host: <%= ood_nfs_server %>
-        path: /nesi/nobackup
+        host: <%= weka_nfs %>
+        path: /scratch
         destination_path: /nesi/nobackup
       - type: nfs
         name: software
-        host: <%= software_nfs_server %>
-        path: /mnt/data-migration
+        host: <%= weka_nfs %>
+        path: /software
         destination_path: /opt/nesi
-      - type: host
-        name: nslcd-socket
-        host_type: Socket
-        path: /var/run/nslcd/socket
-        destination_path: /var/run/nslcd/socket
       - type: host
         name: nss-socket
         host_type: Socket
