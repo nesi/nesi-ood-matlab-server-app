@@ -41,13 +41,27 @@ script:
   wall_time: "<%= bc_num_hours.to_i * 3600 %>"
   native:
     container:
-      name: "matlab"
+      name: "<%= account.present? ? "matlab-#{account}" : 'matlab' %>"
       image: "ghcr.io/nesi/nesi-docker-base:v0.6.0"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
       restart_policy: 'OnFailure'
       env:
-        TZ: "Pacific/Auckland"
-        LMOD_SITE_MODULEPATH: "/opt/nesi/CS400_centos7_bdw/modules/all"
+        NB_UID: "<%= user.uid %>"
+        NB_USER: "<%= user.name %>"
+        NB_GID: "<%= account.present? ? account : user.group.id %>"
+        HOME: "<%= user.home %>"
+        LOG_DIR: "<%= staged_root %>"
+        SHELL: "/bin/bash"
+        LMOD_CONFIG_DIR: "/opt/nesi/etc/lmod"
+        MODULEPATH_ROOT: "/opt/nesi/lmod"
+        MODULEPATH: "/opt/nesi/lmod/generic"
+        BASH_ENV: "/usr/share/lmod/lmod/init/bash"
+        TZ: 'Pacific/Auckland'
+        JUPYTER_JOB_ACCOUNT: "<%= account %>"
+        PRIMARY_PROJECT: "<%= account %>"
+        <% if additional_projects.present? %>
+        ADDITIONAL_PROJECTS: "<%= Array(additional_projects).join(':') %>"
+        <% end %>
       port: "8080"
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
