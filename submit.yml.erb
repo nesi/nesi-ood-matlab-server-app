@@ -32,7 +32,6 @@
    # Combine all supplemental groups
    all_supplemental_groups = [nesi_gid].compact + additional_gids
 %>
----
 batch_connect:
   template: "basic"
   conn_params:
@@ -65,6 +64,12 @@ script:
       port: "8080"
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
+      <% if all_supplemental_groups.any? %>
+      supplemental_groups:
+        <% all_supplemental_groups.each do |gid| %>
+        - <%= gid %>
+        <% end %>
+      <% end %>
     mounts:
       - type: nfs
         name: home
