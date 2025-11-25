@@ -1,5 +1,4 @@
 <%
-
    user = OodSupport::User.new
    weka_nfs = Resolv.getaddress("weka-nfs")
 
@@ -11,9 +10,28 @@
      nesi_group = Etc.getgrnam(account)  # Fetching the group based on the account
      nesi_gid = nesi_group ? nesi_group.gid : nil  # Get the GID, or nil if not found
    end
-
+   
+   # Get ALL groups the user belongs to that match the project pattern
+   # Same approach as used in form.yml
+   all_user_groups = OodSupport::User.new.groups.sort_by(&:id).tap { |groups|
+     groups.unshift(groups.delete(OodSupport::Process.group))
+   }.map(&:name)
+   
+   # Collect GIDs for ALL user's projects (not just selected ones)
+   additional_gids = []
+   all_user_groups.each do |project|
+     begin
+       project_group = Etc.getgrnam(project)
+       additional_gids << project_group.gid if project_group && project_group.gid != nesi_gid
+     rescue ArgumentError
+       # Handle case where group doesn't exist
+       Rails.logger.warn "Group not found for project: #{project}"
+     end
+   end
+   
+   # Combine all supplemental groups
+   all_supplemental_groups = [nesi_gid].compact + additional_gids
 %>
----
 batch_connect:
   template: "basic"
   conn_params:
@@ -32,6 +50,12 @@ script:
       port: "8080"
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
+      <% if all_supplemental_groups.any? %>
+      supplemental_groups:
+        <% all_supplemental_groups.each do |gid| %>
+        - <%= gid %>
+        <% end %>
+      <% end %>
     mounts:
       - type: nfs
         name: home

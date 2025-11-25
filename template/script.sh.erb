@@ -8,8 +8,10 @@ module purge
 echo "module load"
 module load <%= context.mver %>
 
+export MLM_LICENSE_FILE=<%= context.mlic %>
+
 # load 
-module load matlab-proxy
+module load matlab-proxy/0.27.1-foss-2023a
 
 # matlabServer doesn't inherit "ulimit -s" from system config /etc/security/limits.d/custom.conf
 # Therefore, we are setting it here

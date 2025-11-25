@@ -23,6 +23,8 @@ form:
   - num_cores
   - num_mem
   - node
+  - online_lic
+  - mlic
 description: Request a MATLAB Server
 submit: submit.yml.erb
 title: MATLAB-Server
@@ -87,7 +89,50 @@ attributes:
     step: 1
     value: 1
     widget: number_field
-
+  online_lic:
+    widget: check_box
+    checked_value: 1
+    unchecked_value: 0
+    label: "Online Licence"
+    value: 0
+    help: |
+      Use this if you don't have a institutional licence, 
+      and have a MATLAB licence associated with an email address.
+  mlic:
+    widget: select
+    label: "Licence"
+    required: true
+    options:
+    <%- 
+      # Get available licences dynamically from licence path
+      begin
+        lic_base_path =  "/opt/nesi/share/MATLAB/Licenses"
+        all_lic = []
+        Dir.glob("#{lic_base_path}/*.lic").each do |lic_path|
+          if Pathname.new(lic_path).readable?
+            all_lic << lic_path
+          end
+        end
+        all_lic.each do |lic_path|
+          lic_name = "#{lic_path.split('/').last.split('.').first}"
+          -%>
+            - ["<%= lic_name %>", "<%= lic_path %>"]
+          <%- 
+        end
+      -%>
+    help:<%- 
+      if all_lic.empty?
+      -%>
+      "**WARNING: YOU DO NOT HAVE ACCESS TO A VALID MATLAB LICENCE**\n\nContact NeSI support if you believe this is a mistake."
+      <%-
+      else
+      -%>
+      "Select which licence to use."
+      <%-
+      end
+    end
+    -%>
+    display: true
 # All of the attributes that make up the Dashboard form (in respective order),
 # and made available to the submit configuration file and the template ERB
 # files
