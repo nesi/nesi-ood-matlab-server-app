@@ -38,7 +38,6 @@ batch_connect:
   conn_params:
     - mwitoken
 <% if cluster == "my-k8s-cluster" -%>
-mwitoken: "test"
 script:
   accounting_id: "<%= account %>"
   wall_time: "<%= bc_num_hours.to_i * 3600 %>"
@@ -75,6 +74,7 @@ script:
         ADDITIONAL_PROJECTS: "<%= Array(additional_projects).join(':') %>"
         <% end %>
       port: "8080"
+      mwitoken: "test"
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
       startup_probe:
