@@ -1,3 +1,8 @@
+<%-
+  require 'securerandom'
+  mwitoken=SecureRandom.uuid
+-%>
+
 <%
    user = OodSupport::User.new
    weka_nfs_server = Resolv.getaddress("weka-nfs")
@@ -73,7 +78,7 @@ script:
         <% if additional_projects.present? %>
         ADDITIONAL_PROJECTS: "<%= Array(additional_projects).join(':') %>"
         <% end %>
-        MWI_AUTH_TOKEN: "<%= SecureRandom.hex(32) %>"
+        MWI_AUTH_TOKEN: "<%= mwitoken %>"
       port: "8080"
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
