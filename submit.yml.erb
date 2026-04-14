@@ -38,8 +38,8 @@ batch_connect:
   conn_params:
     - mwitoken
 <% if cluster == "my-k8s-cluster" -%>
+mwitoken: "test"
 script:
-  mwitoken: "test"
   accounting_id: "<%= account %>"
   wall_time: "<%= bc_num_hours.to_i * 3600 %>"
   native:
