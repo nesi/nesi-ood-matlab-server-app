@@ -1,8 +1,3 @@
-<script>
-  const mwitoken = "<%= @job.conn_params[:mwi_auth_token] %>";
-  // Use the token for your connection
-  console.log(mwitoken);
-</script>
 <form action="/node/<%= host %>/<%= port %>/matlab?mwi-auth-token=<%= mwitoken %>" method="post" target="_blank">
   <input type="hidden" name="mwi-auth-token" value="<%= mwitoken %>">
   <button class="btn btn-primary" type="submit">
