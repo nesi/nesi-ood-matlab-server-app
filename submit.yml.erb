@@ -42,8 +42,6 @@ script:
   accounting_id: "<%= account %>"
   wall_time: "<%= bc_num_hours.to_i * 3600 %>"
   native:
-    conn_params:
-      - mwitoken
     container:
       name: "<%= account.present? ? "matlab-#{account}" : 'matlab' %>"
       image: "ghcr.io/nesi/nesi-docker-base:v0.9.0"

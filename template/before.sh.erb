@@ -21,6 +21,7 @@ source /bin/save_passwd_as_secret
 export host="$HOST_CFG"
 export port="$PORT_CFG"
 export port=8080
+export token=${mwitoken}
 
 <%- else -%>
 # Find available port to run server on
