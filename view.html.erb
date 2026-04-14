@@ -1,7 +1,7 @@
 
 
-<form action="/node/<%= host %>/<%= port %>/matlab?mwi-auth-token=<%= mwi_auth_token %>" method="post" target="_blank">
-  <input type="hidden" name="mwi_auth_token" value="<%= mwi_auth_token %>">
+<form action="/node/<%= host %>/<%= port %>/matlab?mwi-auth-token=<%= mwitoken.to_s %>" method="post" target="_blank">
+  <input type="hidden" name="mwi_auth_token" value="<%= mwitoken.to_s %>">
   <button class="btn btn-primary" type="submit">
     <i class="fa fa-eye"></i> Connect to MATLAB
   </button>
