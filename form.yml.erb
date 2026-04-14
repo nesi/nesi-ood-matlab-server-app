@@ -110,7 +110,7 @@ attributes:
     <%- 
       # Get available licences dynamically from licence path
       begin
-        lic_base_path =  "/opt/nesi/share/MATLAB/Licenses"
+        lic_base_path = "/opt/nesi/share/MATLAB/Licenses"
         all_lic = []
         Dir.glob("#{lic_base_path}/*.lic").each do |lic_path|
           if Pathname.new(lic_path).readable?

@@ -69,6 +69,5 @@ TMPDIR="$(mktemp -d)"
 echo "Starting up matlab..."
 set -x
 env MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab" 
-env MWI_AUTH_TOKEN=${mwitoken}
 matlab-proxy-app
 
