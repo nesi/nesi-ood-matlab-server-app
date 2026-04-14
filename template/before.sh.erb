@@ -21,7 +21,7 @@ source /bin/save_passwd_as_secret
 export host="$HOST_CFG"
 export port="$PORT_CFG"
 export MWI_APP_HOST=0.0.0.0
-export MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab"
+env MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab"
 
 <%- else -%>
 # Find available port to run server on
