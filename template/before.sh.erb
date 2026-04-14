@@ -20,9 +20,9 @@ source /bin/find_host_port
 source /bin/save_passwd_as_secret
 export host="$HOST_CFG"
 export port="$PORT_CFG"
-env MWI_APP_PORT=8080
-env MWI_APP_HOST=0.0.0.0
-env MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab"
+export MWI_APP_PORT=8080
+export MWI_APP_HOST=0.0.0.0
+#export MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab"
 
 <%- else -%>
 # Find available port to run server on
