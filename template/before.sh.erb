@@ -20,9 +20,6 @@ source /bin/find_host_port
 source /bin/save_passwd_as_secret
 export host="$HOST_CFG"
 export port="$PORT_CFG"
-export MWI_APP_PORT=${port}
-export MWI_APP_HOST="0.0.0.0"
-export MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlabb"
 
 <%- else -%>
 # Find available port to run server on
@@ -36,6 +33,10 @@ export MWI_APP_PORT="${port}"
 # export MATLAB_JOB_ACCOUNT="<%= context.account %>"
 
 <%- end -%>
+
+export MWI_APP_PORT=${port}
+export MWI_APP_HOST="0.0.0.0"
+export MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab"
 
 # these are set by pam on normal ssh login
 export LMOD_CONFIG_DIR=/opt/nesi/etc/lmod
