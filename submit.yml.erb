@@ -68,7 +68,7 @@ script:
         MODULEPATH: "/opt/nesi/lmod/generic"
         BASH_ENV: "/usr/share/lmod/lmod/init/bash"
         TZ: 'Pacific/Auckland'
-        PLUTO_JOB_ACCOUNT: "<%= account %>"
+        MATLAB_JOB_ACCOUNT: "<%= account %>"
         PRIMARY_PROJECT: "<%= account %>"
         <% if additional_projects.present? %>
         ADDITIONAL_PROJECTS: "<%= Array(additional_projects).join(':') %>"
