@@ -1,3 +1,23 @@
+<%
+  session_obj =
+    if defined?(@batch_connect_session) && @batch_connect_session
+      @batch_connect_session
+    elsif defined?(@session) && @session
+      @session
+    elsif defined?(@connect) && @connect
+      @connect
+    elsif defined?(@job) && @job
+      @job
+    else
+      nil
+    end
+
+  conn = session_obj&.respond_to?(:conn_params) ? session_obj.conn_params : {}
+  mwitoken = conn[:mwi_auth_token] || conn["mwi_auth_token"]
+%>
+
+
+
 <form action="/node/<%= host %>/<%= port %>/matlab?mwi-auth-token=<%= mwitoken %>" method="post" target="_blank">
   <input type="hidden" name="mwi-auth-token" value="<%= mwitoken %>">
   <button class="btn btn-primary" type="submit">
