@@ -33,10 +33,10 @@
    all_supplemental_groups = [nesi_gid].compact + additional_gids
 %>
 ---
-#batch_connect:
-#  template: "basic"
-#  conn_params:
-#    - mwitoken
+batch_connect:
+  template: "basic"
+  conn_params:
+    - mwitoken
 <% if cluster == "my-k8s-cluster" -%>
 script:
   accounting_id: "<%= account %>"
