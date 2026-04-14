@@ -20,6 +20,7 @@ source /bin/find_host_port
 source /bin/save_passwd_as_secret
 export host="$HOST_CFG"
 export port="$PORT_CFG"
+export port=8080
 
 <%- else -%>
 # Find available port to run server on
@@ -28,7 +29,6 @@ export HOST_CFG="${host}"
 export PORT_CFG="${port}"
 export MWI_APP_PORT="${port}"
 
-
 # this is set for k8s in submit.yml, required for nesi-add-kernel
 # export MATLAB_JOB_ACCOUNT="<%= context.account %>"
 
@@ -36,7 +36,8 @@ export MWI_APP_PORT="${port}"
 
 export MWI_APP_PORT=${port}
 export MWI_APP_HOST="0.0.0.0"
-export MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab"
+#export MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab"
+#export MWI_BASE_URL="/node/${host}/${PORT_CFG}/matlab"
 
 # these are set by pam on normal ssh login
 export LMOD_CONFIG_DIR=/opt/nesi/etc/lmod
