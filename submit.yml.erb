@@ -11,6 +11,7 @@ script:
       image: "ghcr.io/nesi/nesi-docker-base:v0.9.0"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
       env:
+        MWI_AUTH_TOKEN: "<%= mwitoken %>"
         NB_GID: "<%= account.present? ? account : user.group.id %>"
         LOG_DIR: "<%= staged_root %>"
         SHELL: "/bin/bash"
