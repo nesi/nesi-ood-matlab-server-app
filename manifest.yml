@@ -1,8 +1,7 @@
 ---
-name: MATLAB Server
+name: Matlab
 category: Interactive Apps
+subcategory: Servers
 role: batch_connect
 description: |
-  This app will launch [MATLAB], on a cluster node.
-
-  [MATLAB]: https://au.mathworks.com/products/matlab.html
+  This app will launch Matlab.
