@@ -2,8 +2,6 @@
 # that is run when the batch job starts up. It is called before the `script.sh`
 # is forked off into a separate process.
 
-# Export the module function if it exists
-[[ $(type -t module) == "function" ]] && export -f module
 <%-
   require 'securerandom'
   mwitoken=SecureRandom.uuid
@@ -35,15 +33,6 @@ export MWI_APP_PORT="${port}"
 # export MATLAB_JOB_ACCOUNT="<%= context.account %>"
 
 <%- end -%>
-
-export MWI_APP_PORT=${port}
-export MWI_APP_HOST="0.0.0.0"
-
-# these are set by pam on normal ssh login
-export LMOD_CONFIG_DIR=/opt/nesi/etc/lmod
-export MODULEPATH_ROOT=/opt/nesi/lmod
-export MODULEPATH=/opt/nesi/lmod/generic
-export BASH_ENV=/usr/share/lmod/lmod/init/bash
 
 echo "host is: ${host}"
 echo "port is: ${port}"
