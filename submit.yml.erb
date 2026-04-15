@@ -48,6 +48,7 @@ script:
         NB_UID: "<%= user.uid %>"
         NB_USER: "<%= user.name %>"
         NB_GID: "<%= account.present? ? account : user.group.id %>"
+        HOME: "<%= user.home %>"
         LOG_DIR: "<%= staged_root %>"
         SHELL: "/bin/bash"
         LMOD_CONFIG_DIR: "/opt/nesi/etc/lmod"
@@ -60,6 +61,14 @@ script:
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
     mounts:
+      - type: host
+        name: home
+        path: /home
+        destination_path: /home
+      - type: host
+        name: wlghome
+        path: /home
+        destination_path: /scale_wlg_persistent/filesets/home
       - type: host
         name: software
         path: /opt/nesi
