@@ -14,7 +14,7 @@ module purge
 
 # load matlab Server
 echo "module load"
-module load <%= context.mver %>
+module load <%= context.matlab_module %>
 
 export MLM_LICENSE_FILE=<%= context.mlic %>
 

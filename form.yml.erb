@@ -40,7 +40,7 @@ attributes:
     cacheable: false  # we always want k8s at the top?
 
   # allow user to choose which MATLAB module is loaded
-  mver:
+  matlab_module:
     widget: select
     label: "MATLAB module"
     options:
@@ -154,7 +154,7 @@ attributes:
 form:
   - cluster
   - account
-  - mver
+  - matlab_module
   - bc_num_hours
   - num_cores
   - num_mem
