@@ -1,7 +1,12 @@
+<%-
+  require 'securerandom'
+  mwitoken=SecureRandom.uuid
+-%>
+
 <%
    user = OodSupport::User.new
-   weka_nfs = Resolv.getaddress("weka-nfs")
-
+   weka_nfs_server = Resolv.getaddress("weka-nfs")
+   
    # Initialize nesi_gid to nil
    nesi_gid = nil
 
@@ -32,19 +37,31 @@
    # Combine all supplemental groups
    all_supplemental_groups = [nesi_gid].compact + additional_gids
 %>
+---
 batch_connect:
   template: "basic"
   conn_params:
     - mwitoken
+<% if cluster == "my-k8s-cluster" -%>
 script:
+  accounting_id: "<%= account %>"
   wall_time: "<%= bc_num_hours.to_i * 3600 %>"
   native:
     container:
       name: "<%= account.present? ? "matlab-#{account}" : 'matlab' %>"
       image: "ghcr.io/nesi/nesi-docker-base:v0.9.0"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
+      working_dir: "<%= Etc.getpwnam(ENV['USER']).dir %>"
       restart_policy: 'OnFailure'
+      <% if all_supplemental_groups.any? %>
+      supplemental_groups:
+        <% all_supplemental_groups.each do |gid| %>
+        - <%= gid %>
+        <% end %>
+      <% end %>
       env:
+        PERIOD_SECONDS: "10"
+        OPTIONS: -k <%= user.name %>@KAHU-DEV.FLEXI.NZ
         NB_UID: "<%= user.uid %>"
         NB_USER: "<%= user.name %>"
         NB_GID: "<%= account.present? ? account : user.group.id %>"
@@ -53,10 +70,10 @@ script:
         SHELL: "/bin/bash"
         LMOD_CONFIG_DIR: "/opt/nesi/etc/lmod"
         MODULEPATH_ROOT: "/opt/nesi/lmod"
-        MODULEPATH: "/opt/nesi/lmod/generic:/opt/nesi/lmod/mahuika:/opt/nesi/lmod/zen3"
+        MODULEPATH: "/opt/nesi/lmod/generic"
         BASH_ENV: "/usr/share/lmod/lmod/init/bash"
         TZ: 'Pacific/Auckland'
-        JUPYTER_JOB_ACCOUNT: "<%= account %>"
+        MATLAB_JOB_ACCOUNT: "<%= account %>"
         PRIMARY_PROJECT: "<%= account %>"
         <% if additional_projects.present? %>
         ADDITIONAL_PROJECTS: "<%= Array(additional_projects).join(':') %>"
@@ -64,12 +81,10 @@ script:
       port: "8080"
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
-      <% if all_supplemental_groups.any? %>
-      supplemental_groups:
-        <% all_supplemental_groups.each do |gid| %>
-        - <%= gid %>
-        <% end %>
-      <% end %>
+      startup_probe:
+        initial_delay_seconds: 10
+        failure_threshold: 12
+        period_seconds: 5
     mounts:
       - type: host
         name: home
@@ -130,3 +145,20 @@ script:
 
             kubectl get secret ${CFG} -o json | jq --arg key $KEY --arg value $VALUE '.data[$key] = $value'  | kubectl apply -f -
           mount_path: '/opt/open_ondemand/helpers'
+
+<%- else -%>
+script:
+  accounting_id: "<%= account %>"
+  wall_time: "<%= bc_num_hours.to_i * 3600 %>"
+  native:
+    - "--ntasks"
+    - "1"
+    - "--cpus-per-task"
+    - "<%= num_cores %>"
+    - "--mem"
+    - "<%= num_mem %>G"
+<%- if gpu != "none" -%>
+    - "--gpus-per-node"
+    - "<%= gpu %>"
+<%- end -%>
+<%- end -%>
