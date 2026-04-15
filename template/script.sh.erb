@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 echo "Running script.sh.erb script"
 
+# TODO: NeSI/zen3 was not loaded, look into it
+echo "list modules:"
+ml
+echo "load NeSI/zen3"
+ml NeSI/zen3
+echo "list modules:"
+ml
+
 echo "module purge"
 module purge
 
