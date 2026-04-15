@@ -1,12 +1,7 @@
-<%-
-  require 'securerandom'
-  mwitoken=SecureRandom.uuid
--%>
-
 <%
    user = OodSupport::User.new
-   weka_nfs_server = Resolv.getaddress("weka-nfs")
-   
+   weka_nfs = Resolv.getaddress("weka-nfs")
+
    # Initialize nesi_gid to nil
    nesi_gid = nil
 
@@ -37,7 +32,6 @@
    # Combine all supplemental groups
    all_supplemental_groups = [nesi_gid].compact + additional_gids
 %>
----
 batch_connect:
   template: "basic"
   conn_params:
@@ -50,14 +44,7 @@ script:
       name: "<%= account.present? ? "matlab-#{account}" : 'matlab' %>"
       image: "ghcr.io/nesi/nesi-docker-base:v0.9.0"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
-      working_dir: "<%= Etc.getpwnam(ENV['USER']).dir %>"
       restart_policy: 'OnFailure'
-      <% if all_supplemental_groups.any? %>
-      supplemental_groups:
-        <% all_supplemental_groups.each do |gid| %>
-        - <%= gid %>
-        <% end %>
-      <% end %>
       env:
         PERIOD_SECONDS: "10"
         OPTIONS: -k <%= user.name %>@KAHU-DEV.FLEXI.NZ
@@ -72,7 +59,7 @@ script:
         MODULEPATH: "/opt/nesi/lmod/generic"
         BASH_ENV: "/usr/share/lmod/lmod/init/bash"
         TZ: 'Pacific/Auckland'
-        MATLAB_JOB_ACCOUNT: "<%= account %>"
+        JUPYTER_JOB_ACCOUNT: "<%= account %>"
         PRIMARY_PROJECT: "<%= account %>"
         <% if additional_projects.present? %>
         ADDITIONAL_PROJECTS: "<%= Array(additional_projects).join(':') %>"
@@ -80,34 +67,32 @@ script:
       port: "8080"
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
-      startup_probe:
-        initial_delay_seconds: 10
-        failure_threshold: 12
-        period_seconds: 5
+      <% if all_supplemental_groups.any? %>
+      supplemental_groups:
+        <% all_supplemental_groups.each do |gid| %>
+        - <%= gid %>
+        <% end %>
+      <% end %>
     mounts:
-      - type: host
+      - type: nfs
         name: home
+        host: <%= weka_nfs %>
         path: /home
         destination_path: /home
-      - type: host
-        name: wlghome
-        path: /home
-        destination_path: /scale_wlg_persistent/filesets/home
-      - type: host
+      - type: nfs
         name: project
-        path: /nesi/project
+        host: <%= weka_nfs %>
+        path: /project
         destination_path: /nesi/project
-      - type: host
-        name: wlgproject
-        path: /nesi/project
-        destination_path: /scale_wlg_persistent/filesets/project
-      - type: host
+      - type: nfs
         name: nobackup
-        path: /nesi/nobackup
+        host: <%= weka_nfs %>
+        path: /scratch
         destination_path: /nesi/nobackup
-      - type: host
+      - type: nfs
         name: software
-        path: /opt/nesi
+        host: <%= weka_nfs %>
+        path: /software
         destination_path: /opt/nesi
       - type: host
         name: nss-socket
@@ -119,14 +104,17 @@ script:
         host_type: File
         path: /etc/nsswitch.conf
         destination_path: /etc/nsswitch.conf
-        
-      # Required mounts for SLURM
-      - type: host
-        name: munge-socket
-        host_type: Socket
-        path: /var/run/munge/munge.socket.2
-        destination_path: /var/run/munge/munge.socket.2
-      - type: host
-        name: slurm-conf
-        path: /run/slurm/conf
-        destination_path: /etc/slurm/
+    configmap:
+      files:
+        - filename: 'k8_helper'
+          data: |
+            #!/usr/bin/env bash
+
+            set -x
+
+            KEY=$1
+            VALUE=$(echo -n $2 | base64)
+            CFG="$(hostname)-secret"
+
+            kubectl get secret ${CFG} -o json | jq --arg key $KEY --arg value $VALUE '.data[$key] = $value'  | kubectl apply -f -
+          mount_path: '/opt/open_ondemand/helpers'
