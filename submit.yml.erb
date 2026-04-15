@@ -45,8 +45,6 @@ script:
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
       restart_policy: 'OnFailure'
       env:
-        PERIOD_SECONDS: "10"
-        OPTIONS: -k <%= user.name %>@KAHU-DEV.FLEXI.NZ
         NB_UID: "<%= user.uid %>"
         NB_USER: "<%= user.name %>"
         NB_GID: "<%= account.present? ? account : user.group.id %>"
