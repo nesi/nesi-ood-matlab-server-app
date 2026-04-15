@@ -1,5 +1,20 @@
-#!/usr/bin/env bash
-echo "Running script.sh.erb script"
+#!/bin/bash
+
+# Benchmark info
+echo "TIMING - Starting main script at: $(date)"
+
+export SESSION_DIR="${PWD}"
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# TODO: NeSI/zen3 was not loaded, look into it
+echo "list modules:"
+ml
+echo "load NeSI/zen3"
+ml NeSI/zen3
+echo "list modules:"
+ml
 
 echo "module purge"
 module purge
