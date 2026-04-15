@@ -41,6 +41,8 @@ TMPDIR="$(mktemp -d)"
 # Output debug info
 module list
 
+export MWI_AUTH_TOKEN="<%= context.password %>"
+
 # Launch the matlab Server
 echo "Starting up matlab..."
 set -x
