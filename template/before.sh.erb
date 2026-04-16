@@ -9,6 +9,13 @@
 export MWI_AUTH_TOKEN="<%= mwitoken %>"
 export mwitoken="<%= mwitoken %>"
 
+export MWI_APP_HOST="0.0.0.0"
+export MWI_SHUTDOWN_ON_IDLE_TIMEOUT=1440
+export MWI_CUSTOM_MATLAB_ROOT=<%= Etc.getpwnam(ENV['USER']).dir %>
+<%- if online_lic == 1 -%>
+unset MLM_LIC_PATH
+<%- end -%>
+
 <%- if context.cluster == "my-k8s-cluster" -%>
 # Export the module function if it exists
 [[ $(type -t module) == "function" ]] && export -f module
@@ -37,8 +44,6 @@ export MWI_APP_PORT="${port}"
 # export MATLAB_JOB_ACCOUNT="<%= context.account %>"
 
 <%- end -%>
-
-export MWI_APP_HOST="0.0.0.0"
 
 echo "host is: ${host}"
 echo "port is: ${port}"
