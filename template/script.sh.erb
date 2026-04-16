@@ -18,6 +18,8 @@ module load <%= context.matlab_module %>
 
 <%- if context.online_lic == 0 -%>
 export MLM_LICENSE_FILE=<%= context.mlic %>
+<%- else -%>
+export MLM_LICENSE_FILE=
 <%- end -%>
 echo MLM_LICENSE_FILE=${MLM_LICENSE_FILE}
 
