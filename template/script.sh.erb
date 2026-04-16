@@ -16,11 +16,11 @@ module purge
 echo "module load"
 module load <%= context.matlab_module %>
 
-<%- if context.online_lic == 0 -%>
+<% if context.online_lic == '0' %>
 export MLM_LICENSE_FILE=<%= context.mlic %>
-<%- else -%>
+<% else %>
 export MLM_LICENSE_FILE=
-<%- end -%>
+<% end %>
 echo MLM_LICENSE_FILE=${MLM_LICENSE_FILE}
 
 # load 
