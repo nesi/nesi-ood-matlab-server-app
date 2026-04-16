@@ -17,6 +17,10 @@ echo "module load"
 module load <%= context.matlab_module %>
 
 export MLM_LICENSE_FILE=<%= context.mlic %>
+<%- if context.online_lic == 1 -%>
+unset MLM_LICENSE_FILE
+<%- end -%>
+echo MLM_LICENSE_FILE=${MLM_LICENSE_FILE}
 
 # load 
 module load matlab-proxy/0.27.1-foss-2023a
@@ -32,8 +36,6 @@ ulimit -s unlimited
 cd "$HOME"
 
 TMPDIR="$(mktemp -d)"
-
-echo MLM_LIC_PATH=${MLM_LIC_PATH}
 
 # Output debug info
 module list
