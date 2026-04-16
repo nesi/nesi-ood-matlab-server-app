@@ -11,7 +11,8 @@ export mwitoken="<%= mwitoken %>"
 
 export MWI_APP_HOST="0.0.0.0"
 export MWI_SHUTDOWN_ON_IDLE_TIMEOUT=1440
-
+#export MWI_MATLAB_STARTUP_SCRIPT="addpath('<%= Etc.getpwnam(ENV['USER']).dir %>');"
+#echo MWI_MATLAB_STARTUP_SCRIPT=${MWI_MATLAB_STARTUP_SCRIPT}
 <%- if context.online_lic == 1 -%>
 unset MLM_LIC_PATH
 <%- end -%>
@@ -47,5 +48,3 @@ export MWI_APP_PORT="${port}"
 
 echo "host is: ${host}"
 echo "port is: ${port}"
-
-cd ENV['USER']
