@@ -1,3 +1,8 @@
+<%-
+  require 'securerandom'
+  mwitoken=SecureRandom.uuid
+-%>
+
 <%
    user = OodSupport::User.new
    weka_nfs_server = Resolv.getaddress("weka-nfs")
@@ -73,7 +78,7 @@ script:
         <% if additional_projects.present? %>
         ADDITIONAL_PROJECTS: "<%= Array(additional_projects).join(':') %>"
         <% end %>
-      #port: "8080"
+      port: "8080"
       cpu: "<%= num_cores %>"
       memory: "<%= num_mem %>Gi"
       startup_probe:
@@ -126,6 +131,21 @@ script:
         name: slurm-conf
         path: /run/slurm/conf
         destination_path: /etc/slurm/
+    configmap:
+      files:
+        - filename: 'k8_helper'
+          data: |
+            #!/usr/bin/env bash
+
+            set -x
+
+            KEY=$1
+            VALUE=$(echo -n $2 | base64)
+            CFG="$(hostname)-secret"
+
+            kubectl get secret ${CFG} -o json | jq --arg key $KEY --arg value $VALUE '.data[$key] = $value'  | kubectl apply -f -
+          mount_path: '/opt/open_ondemand/helpers'
+
 <%- else -%>
 script:
   accounting_id: "<%= account %>"
