@@ -1,7 +1,6 @@
 ---
 name: Matlab
-category: Interactive Apps
-subcategory: Servers
+category: Interactive Development
 role: batch_connect
 description: |
   This app will launch Matlab.

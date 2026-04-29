@@ -75,6 +75,7 @@ script:
         TZ: 'Pacific/Auckland'
         MATLAB_JOB_ACCOUNT: "<%= account %>"
         PRIMARY_PROJECT: "<%= account %>"
+        OMP_NUM_THREADS: "<%= cores %>"
         <% if additional_projects.present? %>
         ADDITIONAL_PROJECTS: "<%= Array(additional_projects).join(':') %>"
         <% end %>
