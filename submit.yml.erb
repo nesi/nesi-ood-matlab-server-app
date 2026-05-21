@@ -49,7 +49,7 @@ script:
   native:
     container:
       name: "<%= account.present? ? "matlab-#{account}" : 'matlab' %>"
-      image: "ghcr.io/nesi/nesi-docker-base:v0.9.0"
+      image: "ghcr.io/nesi/nesi-docker-base:v0.10.3"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
       working_dir: "<%= Etc.getpwnam(ENV['USER']).dir %>"
       restart_policy: 'OnFailure'
